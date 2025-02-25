@@ -1,90 +1,67 @@
-function calculateWeight() {
-    const currentWeight = document.getElementById('currentWeight').value;
-    const targetWeight = document.getElementById('targetWeight').value;
-    const activityLevel = document.getElementById('activityLevel').value;
-    
-    if (currentWeight && targetWeight) {
-        const waterIntake = currentWeight * 0.033; // نسبة الماء المطلوبة باللتر لكل كجم من الوزن
-        
-        let calorieIntake;
-        switch (activityLevel) {
-            case 'low':
-                calorieIntake = targetWeight * 25;
-                break;
-            case 'moderate':
-                calorieIntake = targetWeight * 30;
-                break;
-            case 'high':
-                calorieIntake = targetWeight * 35;
-                break;
-            default:
-                calorieIntake = targetWeight * 30;
-        }
-        
-        document.getElementById('resultsWeight').innerHTML = `
-            <p>عدد كاسات الماء التي يجب شربها يوميًا: ${(waterIntake * 4.2).toFixed(2)} كاسات</p>
-            <p>عدد السعرات الحرارية اليومية للحفاظ على الوزن المستهدف: ${calorieIntake} سعر حراري</p>
-        `;
-    } else {
-        document.getElementById('resultsWeight').innerHTML = '<p>يرجى إدخال كل من الوزن الحالي والمستهدف ومستوى النشاط.</p>';
-    }
-}
+// script.js
 
-function calculateCalories() {
-    const foodItem = document.getElementById('foodItem').value.toLowerCase();
-    
-    if (foodItem) {
-        const caloriesPerItem = getCalories(foodItem); // حساب السعرات الحرارية للنوع المدخل
-        
-        document.getElementById('resultsCalories').innerHTML = `
-            <p>عدد السعرات الحرارية في ${foodItem}: ${caloriesPerItem} سعر حراري</p>
-        `;
-    } else {
-        document.getElementById('resultsCalories').innerHTML = '<p>يرجى إدخال النوع (غذاء).</p>';
-    }
-}
-
-function calculateMacros() {
-    const currentWeight = document.getElementById('currentWeight').value;
-    const targetWeight = document.getElementById('targetWeight').value;
-    
-    if (currentWeight && targetWeight) {
-        const proteinIntake = targetWeight * 1.6; // غرام من البروتين لكل كجم من الوزن المستهدف
-        const fatIntake = targetWeight * 0.8; // غرام من الدهون لكل كجم من الوزن المستهدف
-        const carbIntake = (targetWeight * 30) - (proteinIntake * 4) - (fatIntake * 9) / 4; // نسبة الكربوهيدرات
-        
-        document.getElementById('resultsMacros').innerHTML = `
-            <p>متطلبات البروتين اليومية: ${proteinIntake.toFixed(2)} غرام</p>
-            <p>متطلبات الدهون اليومية: ${fatIntake.toFixed(2)} غرام</p>
-            <p>متطلبات الكربوهيدرات اليومية: ${carbIntake.toFixed(2)} غرام</p>
-        `;
-    } else {
-        document.getElementById('resultsMacros').innerHTML = '<p>يرجى إدخال كل من الوزن الحالي والمستهدف.</p>';
-    }
-}
-
-function getCalories(foodItem) {
-    const foodCalories = {
-        'تفاح': 52,
-        'موز': 89,
-        'خبز': 265,
-        'لحم': 250,
-        'سمك': 206,
-        'بيض': 155,
-        'دجاج': 239,
-        'أرز': 130,
-        'بطاطس': 77,
-        'جبن': 402,
-        'زبادي': 59,
-        'مكرونة': 131,
-        'حليب': 42,
-        'زيت زيتون': 884,
-        'عدس': 116,
-        'حمص': 364,
-        'فراولة': 32,
-        'بروكلي': 34
-        // يمكن إضافة المزيد من الأنواع هنا
+function حساب_الجمل(اسم, اسم_الام) {
+    const قيم_الحروف = {
+        'أ': 1, 'ب': 2, 'ج': 3, 'د': 4,
+        'ه': 5, 'و': 6, 'ز': 7, 'ح': 8,
+        'ط': 9, 'ي': 10, 'ك': 20, 'ل': 30,
+        'م': 40, 'ن': 50, 'س': 60, 'ع': 70,
+        'ف': 80, 'ص': 90, 'ق': 100, 'ر': 200,
+        'ش': 300, 'ت': 400, 'ث': 500, 'خ': 600,
+        'ذ': 700, 'ض': 800, 'ظ': 900, 'غ': 1000
     };
+
+    function مجموع_الحروف(كلمة) {
+        let المجموع = 0;
+        for (let حرف of كلمة) {
+            if (قيم_الحروف[حرف]) {
+                المجموع += قيم_الحروف[حرف];
+            }
+        }
+        return المجموع;
+    }
+
+    const مجموع_الاسم = مجموع_الحروف(اسم);
+    const مجموع_اسم_الام = مجموع_الحروف(اسم_الام);
+    const الناتج = مجموع_الاسم + مجموع_اسم_الام;
+
+    return الناتج;
+}
+
+function تحديد_البرج(اسم, اسم_الام) {
+    const الأبراج = [
+        { name: "الحمل", type: "ناري", compatible: ["الميزان", "القوس"] },
+        { name: "الثور", type: "ترابي", compatible: ["العذراء", "الجدي"] },
+        { name: "الجوزاء", type: "هوائي", compatible: ["الحمل", "الميزان"] },
+        { name: "السرطان", type: "مائي", compatible: ["الثور", "العقرب"] },
+        { name: "الأسد", type: "ناري", compatible: ["الجوزاء", "الدلو"] },
+        { name: "العذراء", type: "ترابي", compatible: ["الثور", "السرطان"] },
+        { name: "الميزان", type: "هوائي", compatible: ["الجوزاء", "الأسد"] },
+        { name: "العقرب", type: "مائي", compatible: ["السرطان", "الحوت"] },
+        { name: "القوس", type: "ناري", compatible: ["الحمل", "الأسد"] },
+        { name: "الجدي", type: "ترابي", compatible: ["الثور", "العذراء"] },
+        { name: "الدلو", type: "هوائي", compatible: ["الجوزاء", "القوس"] },
+        { name: "الحوت", type: "مائي", compatible: ["العقرب", "الجدي"] }
+    ];
+
+    const المجموع = حساب_الجمل(اسم, اسم_الام);
+    const index = (المجموع % 12) - 1;
+    const البرج = الأبراج[index >= 0 ? index : 11];
+    return البرج;
+}
+
+function حساب_البرج() {
+    const اسم = document.getElementById('name').value;
+    const اسم_الام = document.getElementById('motherName').value;
     
-    return foodCalories[foodItem] || 'غير معروف';
+    if (اسم === "" || اسم_الام === "") {
+        document.getElementById('resultText').innerText = "يرجى إدخال الاسم واسم الأم بشكل صحيح.";
+        document.getElementById('resultBox').classList.add("show");
+        return;
+    }
+
+    const البرج = تحديد_البرج(اسم, اسم_الام);
+    const compatibleSigns = البرج.compatible.join(" و ");
+    document.getElementById('resultText').textContent = `برجك الفلكي هو: ${البرج.name} (${البرج.type}). الأبراج المتوافقة معك هي: ${compatibleSigns}.`;
+    document.getElementById('resultBox').classList.add("show");
 }
